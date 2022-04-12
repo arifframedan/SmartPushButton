@@ -1,0 +1,14 @@
+#######################################
+# Data types (KEYWORD1)
+#######################################
+SmartPushButton		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin			KEYWORD2
+process			KEYWORD2
+event			KEYWORD2
+clearEvent		KEYWORD2
+setShortPressInterval 	KEYWORD2
+setLongPressInterval 	KEYWORD2
