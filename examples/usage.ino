@@ -5,7 +5,7 @@ SmartPushButton spb;
 void setup()
 {
   Serial.begin (57600); 
-  spb.begin(0);         //Set the input pin
+  spb.begin(0, ACTIVE_LOW);        //Set the input pin
 }
 
 void loop()
