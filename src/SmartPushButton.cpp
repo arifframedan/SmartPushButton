@@ -1,5 +1,19 @@
 #include "SmartPushButton.h"
 
+void SmartPushButton::begin(int Pin, int Polarity){
+  tPin = Pin;
+  PUSHED = Polarity;
+  NOTPUSHED = 1 - PUSHED;
+  pinMode(tPin, INPUT_PULLUP);
+}
+
+void SmartPushButton::process(){
+  unsigned long cMillis = millis();
+  if (cMillis - pMillis >= 10){
+    pMillis = cMillis;
+    stateMachine();
+  }
+}
 
 void SmartPushButton::stateMachine(){
   int pb = digitalRead(tPin);
@@ -14,10 +28,14 @@ void SmartPushButton::stateMachine(){
       if (pb == PUSHED){
         counter++;
         if (counter > longPressInterval){
-          if (pushCounter == 0)
+          if (pushCounter == 0){
             Event = EVENT_SINGLE_PRESSED_HOLD;
-          else if (pushCounter == 1)
+			signalSinglePressHold.emit();
+		  }
+          else if (pushCounter == 1){
             Event = EVENT_DOUBLE_PRESSED_HOLD;
+			signalDoublePressHold.emit();
+		  }
           tState = 2;
         }
       }
@@ -42,10 +60,14 @@ void SmartPushButton::stateMachine(){
     case 4:
       counter++;
       if ((pb == NOTPUSHED) && (counter > shortPressInterval)){
-        if (pushCounter == 0)
+        if (pushCounter == 0){
             Event = EVENT_SINGLE_PRESSED;
-        else if (pushCounter == 1)
+			signalSinglePress.emit();
+		}
+        else if (pushCounter == 1){
             Event = EVENT_DOUBLE_PRESSED; 
+			signalDoublePress.emit();
+		}
         tState = 3;
       }
       else if ((pb == PUSHED) && (counter <= shortPressInterval)){
@@ -56,6 +78,3 @@ void SmartPushButton::stateMachine(){
       break;      
   }
 }
-
-
-
